@@ -1,5 +1,6 @@
 import { DataSource } from "typeorm";
 import { envs } from '../configuration/envs.js';
+import { bookEntity } from "../module/user/entity/book.entity.js";
 
 const AppDataSource = new DataSource({
     type: 'mysql', // DB que usamos
@@ -10,7 +11,7 @@ const AppDataSource = new DataSource({
     database: envs.DATABASE,
     synchronize: true,
     logging: false,
-    entities: [],
+    entities: [bookEntity],
 });
 
 export default AppDataSource;

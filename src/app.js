@@ -7,4 +7,9 @@ app.use(express.json());
 
 app.set('port', envs.PORT);
 
+app.get('/', (req, res) => {
+  res.send('🚀 Servidor funcionando correctamente!');
+});
+
+
 export default app;

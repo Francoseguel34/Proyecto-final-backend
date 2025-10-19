@@ -1,23 +1,24 @@
 import app from './app.js';
 import { envs } from './configuration/envs.js';
 import pkg from 'signale';
+import AppDataSource from './providers/datasource.provider.js';
+import "reflect-metadata";
+
 
 const { Signale } = pkg;
-import AppDataSource from './providers/datasource.provider.js';
+const logger = new Signale({ scope: 'Main' });
 
-const main = () => {
-    const logger = new Signale({ scope: 'Main' })
-    
-    const port = app.get('port');
+const main = async () => {
+  try {
+    await AppDataSource.initialize();
+    logger.success('Connected to database');
 
-    AppDataSource.initialize()
-    .then(() => logger.log('Connected to database'))
-    .catch(() => logger.log('Unable to connect to database'));
-
-app.listen(envs.PORT, () => {
-  console.log(`[Main] » server running on http://localhost:${envs.PORT}`);
-});
+    app.listen(envs.PORT, () => {
+      logger.start(`Server running on http://localhost:${envs.PORT}`);
+    });
+  } catch (error) {
+    logger.error('Unable to connect to database', error);
+  }
 };
-
 
 main();
