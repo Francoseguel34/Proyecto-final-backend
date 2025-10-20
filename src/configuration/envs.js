@@ -10,6 +10,7 @@ const envsSchema = Joi.object({
   DB_PORT: Joi.number().required(),
   DB_PASS: Joi.string().allow('').optional(),
   DB_HOST: Joi.string().required(),
+  JWT_SECRET: Joi.string().required()
 }).unknown(true);
 
 const { value, error } = envsSchema.validate(process.env);
@@ -22,5 +23,6 @@ export const envs = {
   DB_USER: value.DB_USER,
   DB_PORT: value.DB_PORT,
   DB_PASS: value.DB_PASS,
-  DB_HOST: value.DB_HOST
+  DB_HOST: value.DB_HOST,
+  JWT_SECRET: value.JWT_SECRET
 };
