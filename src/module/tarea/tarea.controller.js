@@ -1,10 +1,10 @@
 import { AppDataSource } from "../../providers/datasource.provider.js";
-import { tareaEntity } from "./entity/tarea.entity.js";
+import { Tarea } from "./entity/tarea.entity.js";
 
 // Crear tarea
 export const createTarea = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(tareaEntity);
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const tarea = tareaRepo.create(req.body);
     const nuevaTarea = await tareaRepo.save(tarea);
     res.status(201).json(nuevaTarea);
@@ -16,7 +16,7 @@ export const createTarea = async (req, res) => {
 // Listar todas las tareas
 export const getTareas = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(tareaEntity);
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const tareas = await tareaRepo.find({
       relations: ["materia", "alumno"],
     });
@@ -29,7 +29,7 @@ export const getTareas = async (req, res) => {
 // Obtener una tarea por ID
 export const getTareaById = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(tareaEntity);
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const tarea = await tareaRepo.findOne({
       where: { id: parseInt(req.params.id) },
       relations: ["materia", "alumno"],
@@ -45,7 +45,7 @@ export const getTareaById = async (req, res) => {
 // Actualizar tarea
 export const updateTarea = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(tareaEntity);
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const tarea = await tareaRepo.findOneBy({ id: parseInt(req.params.id) });
 
     if (!tarea) return res.status(404).json({ message: "Tarea no encontrada" });
@@ -61,7 +61,7 @@ export const updateTarea = async (req, res) => {
 // Eliminar tarea
 export const deleteTarea = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(tareaEntity);
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const result = await tareaRepo.delete({ id: parseInt(req.params.id) });
 
     if (result.affected === 0) return res.status(404).json({ message: "Tarea no encontrada" });

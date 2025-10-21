@@ -1,10 +1,10 @@
 import { AppDataSource } from "../../providers/datasource.provider.js";
-import { materiaEntity } from "./entity/materia.entity.js";
+import { Materia } from "./entity/materia.entity.js";
 
 // Crear materia
 export const createMateria = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(materiaEntity);
+    const repo = AppDataSource.getRepository(Materia);
     const materia = repo.create(req.body);
     const nueva = await repo.save(materia);
     res.status(201).json(nueva);
@@ -16,7 +16,7 @@ export const createMateria = async (req, res) => {
 // Obtener todas las materias
 export const getMaterias = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(materiaEntity);
+    const repo = AppDataSource.getRepository(Materia);
     const materias = await repo.find({ relations: ["profesor", "alumnos", "tareas"] });
     res.json(materias);
   } catch (error) {
@@ -27,7 +27,7 @@ export const getMaterias = async (req, res) => {
 // Obtener materia por ID
 export const getMateriaById = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(materiaEntity);
+    const repo = AppDataSource.getRepository(Materia);
     const materia = await repo.findOne({
       where: { id: parseInt(req.params.id) },
       relations: ["profesor", "alumnos", "tareas"],
@@ -42,7 +42,7 @@ export const getMateriaById = async (req, res) => {
 // Actualizar materia
 export const updateMateria = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(materiaEntity);
+    const repo = AppDataSource.getRepository(Materia);
     const materia = await repo.findOneBy({ id: parseInt(req.params.id) });
     if (!materia) return res.status(404).json({ message: "Materia no encontrada" });
 
@@ -57,7 +57,7 @@ export const updateMateria = async (req, res) => {
 // Eliminar materia
 export const deleteMateria = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(materiaEntity);
+    const repo = AppDataSource.getRepository(Materia);
     const result = await repo.delete({ id: parseInt(req.params.id) });
     if (result.affected === 0) return res.status(404).json({ message: "Materia no encontrada" });
     res.json({ message: "Materia eliminada correctamente" });

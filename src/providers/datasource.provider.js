@@ -13,7 +13,8 @@ export const AppDataSource = new DataSource({
   username: process.env.DB_USER || "root",
   password: process.env.DB_PASSWORD || "",
   database: process.env.DB_NAME || "backend_final",
-  synchronize: true,
+synchronize: false,
+dropSchema: false, // ⚠️ importante mantenerlo una sola ejecución
   logging: false,
   entities: [Profesor, Alumno, Materia, Tarea, AlumnoMateria],
 });

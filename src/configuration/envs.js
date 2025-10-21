@@ -5,7 +5,7 @@ dotenv.config();
 
 const envsSchema = Joi.object({
   PORT: Joi.number().required(),
-  DATABASE: Joi.string().required(),
+  DB_NAME: Joi.string().required(),
   DB_USER: Joi.string().required(),
   DB_PORT: Joi.number().required(),
   DB_PASS: Joi.string().allow('').optional(),

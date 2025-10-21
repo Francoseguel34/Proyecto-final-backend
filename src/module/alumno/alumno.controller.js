@@ -1,10 +1,9 @@
 import { AppDataSource } from "../../providers/datasource.provider.js";
-import { alumnoEntity } from "./entity/alumno.entity.js";
-
+import { Alumno } from "./entity/alumno.entity.js"; // Cambiado de alumnoEntity
 // Crear alumno
 export const createAlumno = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(alumnoEntity);
+    const repo = AppDataSource.getRepository(Alumno);
     const alumno = repo.create(req.body);
     const nuevo = await repo.save(alumno);
     res.status(201).json(nuevo);
@@ -16,7 +15,7 @@ export const createAlumno = async (req, res) => {
 // Obtener todos los alumnos
 export const getAlumnos = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(alumnoEntity);
+    const repo = AppDataSource.getRepository(Alumno);
     const alumnos = await repo.find({ relations: ["materias", "tareas"] });
     res.json(alumnos);
   } catch (error) {
@@ -27,7 +26,7 @@ export const getAlumnos = async (req, res) => {
 // Obtener alumno por ID
 export const getAlumnoById = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(alumnoEntity);
+    const repo = AppDataSource.getRepository(Alumno);
     const alumno = await repo.findOne({
       where: { id: parseInt(req.params.id) },
       relations: ["materias", "tareas"],
@@ -42,7 +41,7 @@ export const getAlumnoById = async (req, res) => {
 // Actualizar alumno
 export const updateAlumno = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(alumnoEntity);
+    const repo = AppDataSource.getRepository(Alumno);
     const alumno = await repo.findOneBy({ id: parseInt(req.params.id) });
     if (!alumno) return res.status(404).json({ message: "Alumno no encontrado" });
 
@@ -57,7 +56,7 @@ export const updateAlumno = async (req, res) => {
 // Eliminar alumno
 export const deleteAlumno = async (req, res) => {
   try {
-    const repo = AppDataSource.getRepository(alumnoEntity);
+    const repo = AppDataSource.getRepository(Alumno);
     const result = await repo.delete({ id: parseInt(req.params.id) });
     if (result.affected === 0) return res.status(404).json({ message: "Alumno no encontrado" });
     res.json({ message: "Alumno eliminado correctamente" });
