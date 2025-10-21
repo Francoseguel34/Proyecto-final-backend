@@ -1,21 +1,19 @@
 import { DataSource } from "typeorm";
-import { envs } from '../configuration/envs.js';
-import { profesorEntity } from "../module/profesor/entity/profesor.entity.js";
-import { alumnoEntity } from "../module/alumno/entity/alumno.entity.js";
-import { materiaEntity } from "../module/materia/entity/materia.entity.js";
-import { tareaEntity } from "../module/tarea/entity/tarea.entity.js";
+import { Profesor } from "../module/profesor/entity/profesor.entity.js";
+import { Alumno } from "../module/alumno/entity/alumno.entity.js";
+import { Materia } from "../module/materia/entity/materia.entity.js";
+import { Tarea } from "../module/tarea/entity/tarea.entity.js";
+import { AlumnoMateria } from "../module/alumno_materia/entity/alumno_materia.entity.js";
+import "reflect-metadata";
 
-
-const AppDataSource = new DataSource({
-    type: 'mysql', // DB que usamos
-    host: envs.DB_HOST,
-    port: envs.DB_PORT,
-    username: envs.DB_USER,
-    password: envs.DB_PASS,
-    database: envs.DATABASE,
-    synchronize: true,
-    logging: false,
-    entities: [profesorEntity, alumnoEntity, materiaEntity, tareaEntity],
+export const AppDataSource = new DataSource({
+  type: "mysql",
+  host: process.env.DB_HOST || "localhost",
+  port: process.env.DB_PORT || 3306,
+  username: process.env.DB_USER || "root",
+  password: process.env.DB_PASSWORD || "",
+  database: process.env.DB_NAME || "backend_final",
+  synchronize: true,
+  logging: false,
+  entities: [Profesor, Alumno, Materia, Tarea, AlumnoMateria],
 });
-
-export default AppDataSource;

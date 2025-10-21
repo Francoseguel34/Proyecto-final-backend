@@ -1,47 +1,29 @@
 import { EntitySchema } from "typeorm";
 
-export const tareaEntity = new EntitySchema({
+export const Tarea = new EntitySchema({
   name: "Tarea",
   tableName: "tareas",
   columns: {
-    id: {
-      primary: true,
-      type: "int",
-      generated: true,
-    },
-    titulo: {
-      type: "varchar",
-      nullable: false,
-    },
-    descripcion: {
-      type: "text",
-      nullable: true,
-    },
-    fechaEntrega: {
-      type: "datetime",
-      nullable: true,
-    },
-    archivoUrl: {
-      type: "varchar",
-      nullable: true,
-    },
-    entregada: {
-      type: "boolean",
-      default: false,
-    },
+    id: { type: Number, primary: true, generated: true },
+    titulo: { type: String, nullable: false },
+    descripcion: { type: String, nullable: true },
+    fechaEntrega: { type: "datetime", nullable: true },
+    archivoUrl: { type: String, nullable: true },
+    entregada: { type: Boolean, default: false },
+    calificacion: { type: "decimal", precision: 4, scale: 2, nullable: true },
   },
   relations: {
     materia: {
-      type: "many-to-one",
       target: "Materia",
+      type: "many-to-one",
       joinColumn: { name: "materia_id" },
-      nullable: false,
+      onDelete: "CASCADE",
     },
     alumno: {
-      type: "many-to-one",
       target: "Alumno",
+      type: "many-to-one",
       joinColumn: { name: "alumno_id" },
-      nullable: true,
+      onDelete: "CASCADE",
     },
   },
 });

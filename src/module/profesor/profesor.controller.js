@@ -1,4 +1,4 @@
-import AppDataSource from "../../providers/datasource.provider.js";
+import { AppDataSource } from "../../providers/datasource.provider.js";
 import { profesorEntity } from "./entity/profesor.entity.js";
 
 // Crear profesor

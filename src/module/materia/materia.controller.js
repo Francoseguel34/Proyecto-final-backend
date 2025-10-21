@@ -1,4 +1,4 @@
-import AppDataSource from "../../providers/datasource.provider.js";
+import { AppDataSource } from "../../providers/datasource.provider.js";
 import { materiaEntity } from "./entity/materia.entity.js";
 
 // Crear materia

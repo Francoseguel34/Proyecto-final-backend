@@ -1,36 +1,19 @@
 import { EntitySchema } from "typeorm";
 
-export const profesorEntity = new EntitySchema({
+export const Profesor = new EntitySchema({
   name: "Profesor",
   tableName: "profesores",
   columns: {
-    id: {
-      primary: true,
-      type: "int",
-      generated: true,
-    },
-    nombre: {
-      type: "varchar",
-      nullable: false,
-    },
-    apellido: {
-      type: "varchar",
-      nullable: false,
-    },
-    email: {
-      type: "varchar",
-      unique: true,
-      nullable: false,
-    },
-    password: {
-      type: "varchar",
-      nullable: false,
-    },
+    id: { type: Number, primary: true, generated: true },
+    nombre: { type: String, nullable: false },
+    apellido: { type: String, nullable: false },
+    email: { type: String, unique: true, nullable: false },
+    password: { type: String, nullable: false },
   },
   relations: {
     materias: {
-      type: "one-to-many",
       target: "Materia",
+      type: "one-to-many",
       inverseSide: "profesor",
     },
   },

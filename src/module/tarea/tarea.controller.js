@@ -1,4 +1,4 @@
-import AppDataSource from "../../providers/datasource.provider.js";
+import { AppDataSource } from "../../providers/datasource.provider.js";
 import { tareaEntity } from "./entity/tarea.entity.js";
 
 // Crear tarea

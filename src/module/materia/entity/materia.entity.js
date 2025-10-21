@@ -1,39 +1,30 @@
 import { EntitySchema } from "typeorm";
 
-export const materiaEntity = new EntitySchema({
+export const Materia = new EntitySchema({
   name: "Materia",
   tableName: "materias",
   columns: {
-    id: {
-      primary: true,
-      type: "int",
-      generated: true,
-    },
-    nombre: {
-      type: "varchar",
-      nullable: false,
-    },
-    descripcion: {
-      type: "text",
-      nullable: true,
-    },
+    id: { type: Number, primary: true, generated: true },
+    nombre: { type: String, nullable: false },
+    descripcion: { type: String, nullable: true },
   },
   relations: {
     profesor: {
-      type: "many-to-one",
       target: "Profesor",
+      type: "many-to-one",
       joinColumn: { name: "profesor_id" },
-      nullable: false,
-    },
-    alumnos: {
-      type: "many-to-many",
-      target: "Alumno",
-      inverseSide: "materias",
+      onDelete: "SET NULL",
     },
     tareas: {
-      type: "one-to-many",
       target: "Tarea",
+      type: "one-to-many",
       inverseSide: "materia",
+    },
+    alumnos: {
+      target: "Alumno",
+      type: "many-to-many",
+      inverseSide: "materias",
+      joinTable: { name: "alumno_materia" },
     },
   },
 });

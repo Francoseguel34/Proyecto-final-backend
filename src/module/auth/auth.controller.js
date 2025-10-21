@@ -1,28 +1,32 @@
 import jwt from "jsonwebtoken";
 import { envs } from "../../configuration/envs.js";
-import AppDataSource from "../../providers/datasource.provider.js";
-import { profesorEntity } from "../profesor/entity/profesor.entity.js";
-import { alumnoEntity } from "../alumno/entity/alumno.entity.js";
+import { AppDataSource } from "../../providers/datasource.provider.js"; // ✅ import con llaves
+import { Profesor } from "../profesor/entity/profesor.entity.js"; // ✅ nombre correcto
+import { Alumno } from "../alumno/entity/alumno.entity.js";       // ✅ nombre correcto
 
 // Login de Profesor o Alumno
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const profesorRepo = AppDataSource.getRepository(profesorEntity);
-    const alumnoRepo = AppDataSource.getRepository(alumnoEntity);
+    // Repositorios correctos
+    const profesorRepo = AppDataSource.getRepository("Profesor");
+    const alumnoRepo = AppDataSource.getRepository("Alumno");
 
+    // Buscar usuario por email
     const user =
       (await profesorRepo.findOneBy({ email })) ||
       (await alumnoRepo.findOneBy({ email }));
 
     if (!user || user.password !== password) {
-      return res.status(401).json({ ok: false, message: "Credenciales inválidas" });
+      return res
+        .status(401)
+        .json({ ok: false, message: "Credenciales inválidas" });
     }
 
-    // Payload JWT
+    // Crear token JWT
     const payload = { id: user.id, email: user.email };
-    const token = jwt.sign(payload, env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign(payload, envs.JWT_SECRET, { expiresIn: "1h" });
 
     res.status(200).json({
       ok: true,
@@ -30,6 +34,8 @@ export const login = async (req, res) => {
       metadata: { user: { ...user, password: "***" }, token },
     });
   } catch (error) {
-    res.status(500).json({ message: "Error al autenticar", error: error.message });
+    res
+      .status(500)
+      .json({ message: "Error al autenticar", error: error.message });
   }
 };
