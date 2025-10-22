@@ -4,10 +4,37 @@ import { Tarea } from "./entity/tarea.entity.js";
 // Crear tarea
 export const createTarea = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(Tarea);
-    const tarea = tareaRepo.create(req.body);
+const tareaRepo = AppDataSource.getRepository(Tarea);
+
+    const { titulo, descripcion, fechaEntrega, archivoUrl, materia_id, alumno_id } = req.body;
+
+    // Crear tarea con relaciones
+    const tarea = tareaRepo.create({
+      titulo,
+      descripcion,
+      fechaEntrega,
+      archivoUrl,
+      materia: { id: materia_id },  // asigna la relación correctamente
+      alumno: alumno_id ? { id: alumno_id } : null, // asigna la relación si existe
+    });
     const nuevaTarea = await tareaRepo.save(tarea);
     res.status(201).json(nuevaTarea);
+    
+    //Evento para emitir notificaciones cuando se crea un tarea
+    const io = req.app.get("io");
+
+    //Emitie evento
+    io.emit("nueva_tarea", {
+       message: `Nueva tarea creada: ${tarea.titulo}`,
+      data: nuevaTarea,
+    });
+
+    return res.status(201).json({
+      ok: true,
+      message: "Tarea creada",
+      data: nuevaTarea,
+    });
+
   } catch (error) {
     res.status(500).json({ message: "Error al crear tarea", error: error.message });
   }

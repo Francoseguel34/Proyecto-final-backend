@@ -4,8 +4,14 @@ import { Materia } from "./entity/materia.entity.js";
 // Crear materia
 export const createMateria = async (req, res) => {
   try {
+    const { nombre, descripcion, profesor_id } = req.body; 
+
     const repo = AppDataSource.getRepository(Materia);
-    const materia = repo.create(req.body);
+    const materia = repo.create({
+      nombre,
+      descripcion,
+      profesor: { id: profesor_id } 
+    });
     const nueva = await repo.save(materia);
     res.status(201).json(nueva);
   } catch (error) {

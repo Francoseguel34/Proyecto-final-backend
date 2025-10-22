@@ -10,7 +10,6 @@ export const Tarea = new EntitySchema({
     fechaEntrega: { type: "datetime", nullable: true },
     archivoUrl: { type: String, nullable: true },
     entregada: { type: Boolean, default: false },
-    calificacion: { type: "decimal", precision: 4, scale: 2, nullable: true },
   },
   relations: {
     materia: {

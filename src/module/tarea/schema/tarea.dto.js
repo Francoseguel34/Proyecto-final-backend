@@ -5,8 +5,8 @@ export const createTareaDTO = Joi.object({
   descripcion: Joi.string().allow("", null),
   fechaEntrega: Joi.date().greater("now").required(),
   materia_id: Joi.number().integer().required(),
-  alumno_id: Joi.number().integer().optional(),
-  archivoUrl: Joi.string().uri().optional(),
+  alumno_id: Joi.number().integer().allow(null).optional(),
+  archivoUrl: Joi.string().uri().allow(null, '').optional(),
 });
 
 export const updateTareaDTO = Joi.object({
