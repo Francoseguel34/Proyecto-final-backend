@@ -12,9 +12,12 @@ import authMiddleware from "../../middleware/auth.middleware.js";
 
 const router = Router();
 
+// ✅ Registro público
+router.post("/", validateBody(createAlumnoDTO), createAlumno);
+
+// 🔒 Protegidas
 router.get("/", authMiddleware, getAlumnos);
 router.get("/:id", authMiddleware, getAlumnoById);
-router.post("/", authMiddleware, validateBody(createAlumnoDTO), createAlumno);
 router.put("/:id", authMiddleware, validateBody(updateAlumnoDTO), updateAlumno);
 router.delete("/:id", authMiddleware, deleteAlumno);
 

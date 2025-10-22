@@ -12,9 +12,12 @@ import authMiddleware from "../../middleware/auth.middleware.js";
 
 const router = Router();
 
+// ✅ Registro público (sin token)
+router.post("/", validateBody(createProfesorDTO), createProfesor);
+
+// 🔒 Rutas protegidas (requieren token)
 router.get("/", authMiddleware, getProfesores);
 router.get("/:id", authMiddleware, getProfesorById);
-router.post("/", authMiddleware, validateBody(createProfesorDTO), createProfesor);
 router.put("/:id", authMiddleware, validateBody(updateProfesorDTO), updateProfesor);
 router.delete("/:id", authMiddleware, deleteProfesor);
 
