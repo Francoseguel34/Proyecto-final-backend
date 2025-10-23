@@ -2,13 +2,8 @@ import passport from "passport";
 import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { AppDataSource } from "../providers/datasource.provider.js";
 import { envs } from "./envs.js";
-
-// ✅ Importar las entidades como las exportaste
 import { Profesor } from "../module/profesor/entity/profesor.entity.js";
 import { Alumno } from "../module/alumno/entity/alumno.entity.js";
-
-const profesorRepo = AppDataSource.getRepository("Profesor");
-const alumnoRepo = AppDataSource.getRepository("Alumno");
 
 const opts = {
   jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
@@ -18,6 +13,10 @@ const opts = {
 passport.use(
   new JwtStrategy(opts, async (payload, done) => {
     try {
+      // ⚡ Obtener los repositorios dentro del callback
+      const profesorRepo = AppDataSource.getRepository(Profesor);
+      const alumnoRepo = AppDataSource.getRepository(Alumno);
+
       // Buscar al usuario por ID en ambas tablas
       const user =
         (await profesorRepo.findOneBy({ id: payload.id })) ||
@@ -27,8 +26,12 @@ passport.use(
         return done(null, false);
       }
 
-      return done(null, user);
+      // Eliminar el campo password antes de devolverlo
+      const { password, ...userSinClave } = user;
+
+      return done(null, userSinClave);
     } catch (err) {
+      console.error("Error en estrategia JWT:", err);
       return done(err, false);
     }
   })
