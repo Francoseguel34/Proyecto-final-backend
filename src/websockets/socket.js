@@ -23,7 +23,7 @@ export function initSocket(server) {
     //Evento de prueba al conectar
     socket.emit("nueva_tarea", {
       message: "Bienvenido al sistema de notificaciones",
-      data: { ejemplo: "Esto es una prueba" }
+      data: { ejemplo: "Socket.io corriendo" }
     });
 
     socket.on("disconnect", () => {

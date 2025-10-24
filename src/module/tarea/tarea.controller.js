@@ -4,39 +4,41 @@ import { Tarea } from "./entity/tarea.entity.js";
 // Crear tarea
 export const createTarea = async (req, res) => {
   try {
-const tareaRepo = AppDataSource.getRepository(Tarea);
-
+    const tareaRepo = AppDataSource.getRepository(Tarea);
     const { titulo, descripcion, fechaEntrega, archivoUrl, materia_id, alumno_id } = req.body;
 
-    // Crear tarea con relaciones
+    // Crear tarea con relaciones (TypeORM entiende los objetos relacionados)
     const tarea = tareaRepo.create({
       titulo,
       descripcion,
       fechaEntrega,
       archivoUrl,
-      materia: { id: materia_id },  // asigna la relación correctamente
-      alumno: alumno_id ? { id: alumno_id } : null, // asigna la relación si existe
+      materia: { id: materia_id },
+      alumno: alumno_id ? { id: alumno_id } : null,
     });
-    const nuevaTarea = await tareaRepo.save(tarea);
-    res.status(201).json(nuevaTarea);
-    
-    //Evento para emitir notificaciones cuando se crea un tarea
-    const io = req.app.get("io");
 
-    //Emitie evento
+    const nuevaTarea = await tareaRepo.save(tarea);
+
+    // Emitir notificación por Socket.IO
+    const io = req.app.get("io");
     io.emit("nueva_tarea", {
-       message: `Nueva tarea creada: ${tarea.titulo}`,
+      message: `🆕 Nueva tarea creada: ${tarea.titulo}`,
       data: nuevaTarea,
     });
 
+    // Responder al cliente solo una vez ✅
     return res.status(201).json({
       ok: true,
-      message: "Tarea creada",
+      message: "Tarea creada correctamente",
       data: nuevaTarea,
     });
 
   } catch (error) {
-    res.status(500).json({ message: "Error al crear tarea", error: error.message });
+    console.error("❌ Error en createTarea:", error);
+    return res.status(500).json({
+      message: "Error al crear tarea",
+      error: error.message,
+    });
   }
 };
 
@@ -79,7 +81,12 @@ export const updateTarea = async (req, res) => {
 
     tareaRepo.merge(tarea, req.body);
     const tareaActualizada = await tareaRepo.save(tarea);
-    res.json(tareaActualizada);
+
+    res.json({
+      ok: true,
+      message: "Tarea actualizada correctamente",
+      data: tareaActualizada,
+    });
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar tarea", error: error.message });
   }
@@ -91,9 +98,49 @@ export const deleteTarea = async (req, res) => {
     const tareaRepo = AppDataSource.getRepository(Tarea);
     const result = await tareaRepo.delete({ id: parseInt(req.params.id) });
 
-    if (result.affected === 0) return res.status(404).json({ message: "Tarea no encontrada" });
+    if (result.affected === 0)
+      return res.status(404).json({ message: "Tarea no encontrada" });
+
     res.json({ message: "Tarea eliminada correctamente" });
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar tarea", error: error.message });
+  }
+};
+
+// Entregar una tarea
+export const entregarTarea = async (req, res) => {
+  try {
+    const tareaRepo = AppDataSource.getRepository(Tarea);
+    const { id } = req.params; // ID de la tarea
+    const { alumno_id } = req.body; // quién la entrega (puede venir del token más adelante)
+
+    const tarea = await tareaRepo.findOne({
+      where: { id: parseInt(id) },
+      relations: ["materia", "alumno"]
+    });
+
+    if (!tarea) {
+      return res.status(404).json({ message: "Tarea no encontrada" });
+    }
+
+    // Marcar como entregada
+    tarea.entregada = true;
+    await tareaRepo.save(tarea);
+
+    // Emitir evento por Socket.IO
+    const io = req.app.get("io");
+    io.emit("tarea_entregada", {
+      message: `El alumno con ID ${alumno_id} entregó la tarea: ${tarea.titulo}`,
+      data: tarea
+    });
+
+    return res.status(200).json({
+      ok: true,
+      message: "Tarea entregada correctamente",
+      data: tarea
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Error al entregar tarea", error: error.message });
   }
 };

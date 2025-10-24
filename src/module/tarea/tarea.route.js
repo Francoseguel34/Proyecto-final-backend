@@ -5,6 +5,7 @@ import {
   getTareaById,
   updateTarea,
   deleteTarea,
+  entregarTarea,
 } from "./tarea.controller.js";
 
 import { validateBody } from "../../middleware/validator.middleware.js";
@@ -19,5 +20,6 @@ router.get("/:id", authMiddleware, getTareaById);
 router.post("/", authMiddleware, validateBody(createTareaDTO), createTarea);
 router.put("/:id", authMiddleware, validateBody(updateTareaDTO), updateTarea);
 router.delete("/:id", authMiddleware, deleteTarea);
+router.put("/:id/entregar", authMiddleware, entregarTarea);
 
 export default router;
