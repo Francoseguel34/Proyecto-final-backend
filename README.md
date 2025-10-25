@@ -90,7 +90,8 @@ Ejemplo Body (POST):
   "nombre": "Carlos",
   "apellido": "López",
   "email": "carlos.lopez@example.com",
-  "password": "123456"
+  "password": "123456",
+  "rol": "profesor"
 }
 
 ## Alumnos (/api/alumnos)
@@ -109,7 +110,8 @@ Ejemplo Body (POST):
   "nombre": "María",
   "apellido": "Fernández",
   "email": "maria.fernandez@example.com",
-  "password": "123456"
+  "password": "123456",
+  "rol": "alumno"
 }
 
 ## Materias (/api/materias)
