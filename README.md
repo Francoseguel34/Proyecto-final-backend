@@ -90,7 +90,8 @@ Ejemplo Body (POST):
   "nombre": "Carlos",
   "apellido": "López",
   "email": "carlos.lopez@example.com",
-  "password": "123456"
+  "password": "123456",
+  "rol": "profesor"
 }
 
 ## Alumnos (/api/alumnos)
@@ -109,7 +110,8 @@ Ejemplo Body (POST):
   "nombre": "María",
   "apellido": "Fernández",
   "email": "maria.fernandez@example.com",
-  "password": "123456"
+  "password": "123456",
+  "rol": "alumno"
 }
 
 ## Materias (/api/materias)
@@ -313,6 +315,114 @@ Alumno           API (Express)        Multer (Upload)     Controlador Upload    
    |                     |---- emitir evento "tarea_entregada" ------------------------------------------->|
    |<----------- Respuesta 200 (Entrega registrada) -------------------------------------------------------|
 
+
+Diagrama de Clases
+
++----------------+
+|    Profesor    |
++----------------+
+| - id           |
+| - nombre       |
+| - apellido     |
+| - email        |
+| - password     |
+| - rol="profesor"|
++----------------+
+|                |
++----------------+
+          |
+          | 1..* 
+          |
+          v
++----------------+
+|     Tarea      |
++----------------+
+| - id           |
+| - titulo       |
+| - descripcion  |
+| - fechaEntrega |
+| - archivoUrl   |
+| - entregada    |
+| - profesor_id  |
+| - alumno_id    |
+| - materia_id   |
++----------------+
+          ^
+          | 1..*
+          |
++----------------+
+|     Alumno     |
++----------------+
+| - id           |
+| - nombre       |
+| - apellido     |
+| - email        |
+| - password     |
+| - rol="alumno" |
++----------------+
+          |
+          | *..* (matriculas)
+          |
+          v
++----------------+
+| AlumnoMateria  |
++----------------+
+| - id           |
+| - alumno_id    |
+| - materia_id   |
++----------------+
+          ^
+          | 1..*
+          |
++----------------+
+|    Materia     |
++----------------+
+| - id           |
+| - nombre       |
+| - descripcion  |
++----------------+
+
+Relaciones
+Profesor 1..* → Tarea
+
+Alumno 1..* → Tarea
+
+Materia 1..* → Tarea
+
+Alumno .. Materia (a través de AlumnoMateria)
+
+- Diagrama de Casos de Uso
+
+  +------------------+
+        |    Profesor      |
+        +------------------+
+        |                  |
+        | - Crear Tarea    |
+        | - Actualizar Tarea|
+        | - Eliminar Tarea |
+        | - Asignar Alumnos|
+        +------------------+
+                  |
+                  | <<notifica>> nueva_tarea
+                  v
+              Alumno
+        +------------------+
+        |      Alumno      |
+        +------------------+
+        | - Ver Tareas     |
+        | - Entregar Tarea |
+        | - Ver Materias   |
+        +------------------+
+                  |
+                  | <<notifica>> tarea_entregada
+                  v
+              Profesor
+
+relaciones de los eventos
+
+nueva_tarea → todos los alumnos matriculados en la materia reciben notificación.
+
+tarea_entregada → profesor recibe notificación.
 
 ## 🧩 1. Instalación
 
