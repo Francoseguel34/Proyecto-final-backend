@@ -1,44 +1,44 @@
 import { AppDataSource } from "../../providers/datasource.provider.js";
 import { Tarea } from "./entity/tarea.entity.js";
 
-// Crear tarea
+// Crear tarea → solo profesor
 export const createTarea = async (req, res) => {
   try {
-    const tareaRepo = AppDataSource.getRepository(Tarea);
-    const { titulo, descripcion, fechaEntrega, archivoUrl, materia_id, alumno_id } = req.body;
+    if (req.user.rol !== "profesor") {
+      return res.status(403).json({ message: "Solo un profesor puede crear tareas" });
+    }
 
-    // Crear tarea con relaciones (TypeORM entiende los objetos relacionados)
+    const { titulo, descripcion, fechaEntrega, archivoUrl, materia_id } = req.body;
+    const tareaRepo = AppDataSource.getRepository(Tarea);
+
     const tarea = tareaRepo.create({
       titulo,
       descripcion,
       fechaEntrega,
       archivoUrl,
       materia: { id: materia_id },
-      alumno: alumno_id ? { id: alumno_id } : null,
+      alumno: null,                 // todavía no hay alumno asignado
+      profesor: { id: req.user.id } // profesor que crea la tarea
     });
 
     const nuevaTarea = await tareaRepo.save(tarea);
 
-    // Emitir notificación por Socket.IO
+    // Emitir notificación de nueva tarea
     const io = req.app.get("io");
     io.emit("nueva_tarea", {
       message: `🆕 Nueva tarea creada: ${tarea.titulo}`,
-      data: nuevaTarea,
+      data: nuevaTarea
     });
 
-    // Responder al cliente solo una vez ✅
     return res.status(201).json({
       ok: true,
       message: "Tarea creada correctamente",
-      data: nuevaTarea,
+      data: nuevaTarea
     });
 
   } catch (error) {
     console.error("❌ Error en createTarea:", error);
-    return res.status(500).json({
-      message: "Error al crear tarea",
-      error: error.message,
-    });
+    return res.status(500).json({ message: "Error al crear tarea", error: error.message });
   }
 };
 
@@ -46,22 +46,20 @@ export const createTarea = async (req, res) => {
 export const getTareas = async (req, res) => {
   try {
     const tareaRepo = AppDataSource.getRepository(Tarea);
-    const tareas = await tareaRepo.find({
-      relations: ["materia", "alumno"],
-    });
+    const tareas = await tareaRepo.find({ relations: ["materia", "alumno"] });
     res.json(tareas);
   } catch (error) {
     res.status(500).json({ message: "Error al obtener tareas", error: error.message });
   }
 };
 
-// Obtener una tarea por ID
+// Obtener tarea por ID
 export const getTareaById = async (req, res) => {
   try {
     const tareaRepo = AppDataSource.getRepository(Tarea);
     const tarea = await tareaRepo.findOne({
       where: { id: parseInt(req.params.id) },
-      relations: ["materia", "alumno"],
+      relations: ["materia", "alumno"]
     });
 
     if (!tarea) return res.status(404).json({ message: "Tarea no encontrada" });
@@ -71,9 +69,13 @@ export const getTareaById = async (req, res) => {
   }
 };
 
-// Actualizar tarea
+// Actualizar tarea → solo profesor
 export const updateTarea = async (req, res) => {
   try {
+    if (req.user.rol !== "profesor") {
+      return res.status(403).json({ message: "Solo un profesor puede actualizar tareas" });
+    }
+
     const tareaRepo = AppDataSource.getRepository(Tarea);
     const tarea = await tareaRepo.findOneBy({ id: parseInt(req.params.id) });
 
@@ -85,16 +87,21 @@ export const updateTarea = async (req, res) => {
     res.json({
       ok: true,
       message: "Tarea actualizada correctamente",
-      data: tareaActualizada,
+      data: tareaActualizada
     });
+
   } catch (error) {
     res.status(500).json({ message: "Error al actualizar tarea", error: error.message });
   }
 };
 
-// Eliminar tarea
+// Eliminar tarea → solo profesor
 export const deleteTarea = async (req, res) => {
   try {
+    if (req.user.rol !== "profesor") {
+      return res.status(403).json({ message: "Solo un profesor puede eliminar tareas" });
+    }
+
     const tareaRepo = AppDataSource.getRepository(Tarea);
     const result = await tareaRepo.delete({ id: parseInt(req.params.id) });
 
@@ -102,35 +109,37 @@ export const deleteTarea = async (req, res) => {
       return res.status(404).json({ message: "Tarea no encontrada" });
 
     res.json({ message: "Tarea eliminada correctamente" });
+
   } catch (error) {
     res.status(500).json({ message: "Error al eliminar tarea", error: error.message });
   }
 };
 
-// Entregar una tarea
+// Entregar tarea → solo alumno
 export const entregarTarea = async (req, res) => {
   try {
+    if (req.user.rol !== "alumno") {
+      return res.status(403).json({ message: "Solo un alumno puede entregar tareas" });
+    }
+
     const tareaRepo = AppDataSource.getRepository(Tarea);
-    const { id } = req.params; // ID de la tarea
-    const { alumno_id } = req.body; // quién la entrega (puede venir del token más adelante)
+    const { id } = req.params;
 
     const tarea = await tareaRepo.findOne({
       where: { id: parseInt(id) },
       relations: ["materia", "alumno"]
     });
 
-    if (!tarea) {
-      return res.status(404).json({ message: "Tarea no encontrada" });
-    }
+    if (!tarea) return res.status(404).json({ message: "Tarea no encontrada" });
 
-    // Marcar como entregada
+    tarea.alumno = { id: req.user.id }; // asigna automáticamente el alumno que entrega
     tarea.entregada = true;
     await tareaRepo.save(tarea);
 
-    // Emitir evento por Socket.IO
+    // Emitir notificación de entrega
     const io = req.app.get("io");
     io.emit("tarea_entregada", {
-      message: `El alumno con ID ${alumno_id} entregó la tarea: ${tarea.titulo}`,
+      message: `El alumno ${req.user.nombre} entregó la tarea: ${tarea.titulo}`,
       data: tarea
     });
 

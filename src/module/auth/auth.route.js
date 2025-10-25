@@ -1,9 +1,9 @@
 import { Router } from "express";
-import { login } from "./auth.controller.js";
+import { register, login } from "./auth.controller.js";
 
 const router = Router();
 
-// Endpoint público para login
+router.post("/register", register);
 router.post("/login", login);
 
 export default router;

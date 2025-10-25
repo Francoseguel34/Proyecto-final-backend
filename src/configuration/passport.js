@@ -13,21 +13,32 @@ const opts = {
 passport.use(
   new JwtStrategy(opts, async (payload, done) => {
     try {
-      // ⚡ Obtener los repositorios dentro del callback
       const profesorRepo = AppDataSource.getRepository(Profesor);
       const alumnoRepo = AppDataSource.getRepository(Alumno);
 
-      // Buscar al usuario por ID en ambas tablas
-      const user =
-        (await profesorRepo.findOneBy({ id: payload.id })) ||
-        (await alumnoRepo.findOneBy({ id: payload.id }));
+      let user = null;
+      let rol = null;
 
-      if (!user) {
-        return done(null, false);
+      // ✅ Verificamos si el token indica el rol
+      if (payload.rol === "profesor") {
+        user = await profesorRepo.findOneBy({ id: payload.id });
+        rol = "profesor";
+      } else if (payload.rol === "alumno") {
+        user = await alumnoRepo.findOneBy({ id: payload.id });
+        rol = "alumno";
+      } else {
+        // Si el token no trae rol, intentamos detectarlo manualmente
+        user = await profesorRepo.findOneBy({ id: payload.id });
+        rol = user ? "profesor" : "alumno";
+        if (!user) user = await alumnoRepo.findOneBy({ id: payload.id });
       }
 
-      // Eliminar el campo password antes de devolverlo
+      if (!user) return done(null, false);
+
       const { password, ...userSinClave } = user;
+
+      // 👇 Añadimos el rol al usuario antes de devolverlo
+      userSinClave.rol = rol;
 
       return done(null, userSinClave);
     } catch (err) {
@@ -38,3 +49,4 @@ passport.use(
 );
 
 export default passport;
+
