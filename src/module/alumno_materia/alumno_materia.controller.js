@@ -5,11 +5,11 @@ const alumnoRepo = AppDataSource.getRepository("Alumno");
 const materiaRepo = AppDataSource.getRepository("Materia");
 
 export class AlumnoMateriaController {
-  // 🔹 Obtener todas las matrículas
+  //  Obtener todas las matrículas
   static async obtenerMatriculas(req, res) {
     try {
       const matriculas = await alumnoMateriaRepo.find({
-        relations: ["alumno", "materia"], // 👈 asegura carga completa
+        relations: ["alumno", "materia"], 
       });
       res.json(matriculas);
     } catch (error) {
@@ -20,7 +20,7 @@ export class AlumnoMateriaController {
     }
   }
 
-  // 🔹 Crear matrícula
+  // Crear matrícula
   static async crearMatricula(req, res) {
     try {
       const { alumnoId, materiaId } = req.body;
@@ -34,7 +34,7 @@ export class AlumnoMateriaController {
           .json({ error: "Alumno o materia no encontrados" });
       }
 
-      // 👇 Crear usando relaciones directas
+      // Crear usando relaciones directas
       const nuevaMatricula = alumnoMateriaRepo.create({
         alumno,
         materia,
@@ -54,7 +54,7 @@ export class AlumnoMateriaController {
     }
   }
 
-  // 🔹 Eliminar matrícula
+  // Eliminar matrícula
   static async eliminarMatricula(req, res) {
     try {
       const { id } = req.params;

@@ -17,8 +17,8 @@ export const createTarea = async (req, res) => {
       fechaEntrega,
       archivoUrl,
       materia: { id: materia_id },
-      alumno: null,                 // todavía no hay alumno asignado
-      profesor: { id: req.user.id } // profesor que crea la tarea
+      alumno: null,                 
+      profesor: { id: req.user.id } 
     });
 
     const nuevaTarea = await tareaRepo.save(tarea);
@@ -132,7 +132,7 @@ export const entregarTarea = async (req, res) => {
 
     if (!tarea) return res.status(404).json({ message: "Tarea no encontrada" });
 
-    tarea.alumno = { id: req.user.id }; // asigna automáticamente el alumno que entrega
+    tarea.alumno = { id: req.user.id }; 
     tarea.entregada = true;
     await tareaRepo.save(tarea);
 

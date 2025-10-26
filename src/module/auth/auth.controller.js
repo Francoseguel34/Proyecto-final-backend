@@ -36,7 +36,7 @@ export const register = async (req, res) => {
     });
 
   } catch (error) {
-    console.error("💥 Error en register:", error);
+    console.error("Error en register:", error);
     res.status(500).json({
       message: "Error al registrar usuario",
       error: error.message,
@@ -44,7 +44,7 @@ export const register = async (req, res) => {
   }
 };
 
-// 🔐 Login universal (Profesor o Alumno)
+// Login (Profesor o Alumno)
 export const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -96,7 +96,7 @@ export const login = async (req, res) => {
       metadata: { user: { ...userSinClave, rol: role }, token },
     });
   } catch (error) {
-    console.error("💥 Error en login:", error);
+    console.error("Error en login:", error);
     res.status(500).json({
       message: "Error al autenticar usuario",
       error: error.message,

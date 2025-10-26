@@ -19,7 +19,7 @@ passport.use(
       let user = null;
       let rol = null;
 
-      // ✅ Verificamos si el token indica el rol
+      // se verifica si el token indica el rol
       if (payload.rol === "profesor") {
         user = await profesorRepo.findOneBy({ id: payload.id });
         rol = "profesor";
@@ -37,7 +37,7 @@ passport.use(
 
       const { password, ...userSinClave } = user;
 
-      // 👇 Añadimos el rol al usuario antes de devolverlo
+      // se añade el rol al usuario antes de devolverlo
       userSinClave.rol = rol;
 
       return done(null, userSinClave);

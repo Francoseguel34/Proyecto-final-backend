@@ -6,20 +6,20 @@ import { AppDataSource } from "./providers/datasource.provider.js";
 import { initSocket } from "./websockets/socket.js";
 import pkg from "signale";
 
-// ✅ Instancias y configuración
+// Instancias y configuración
 const { Signale } = pkg;
 const logger = new Signale({ scope: "Main" });
 
 const PORT = envs.PORT || 3000;
 
-// 🚀 Entidades principales (opcional si se usan para inicialización manual)
+// Entidades principales 
 import { Profesor } from "./module/profesor/entity/profesor.entity.js";
 import { Alumno } from "./module/alumno/entity/alumno.entity.js";
 import { Materia } from "./module/materia/entity/materia.entity.js";
 import { Tarea } from "./module/tarea/entity/tarea.entity.js";
 import { AlumnoMateria } from "./module/alumno_materia/entity/alumno_materia.entity.js";
 
-// 🧠 Función principal
+// Función principal
 const main = async () => {
   try {
     // 1️⃣ Inicializar conexión con la base de datos
@@ -43,7 +43,7 @@ const main = async () => {
   } catch (error) {
     logger.error("❌ No se pudo conectar a la base de datos");
     logger.fatal(error);
-    process.exit(1); // 👈 Termina el proceso si hay error crítico
+    process.exit(1); // Termina el proceso si hay error crítico
   }
 };
 

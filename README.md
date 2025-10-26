@@ -1,5 +1,7 @@
 # 🏫 Proyecto Final - Backend (Gestión Académica)
 
+Integrantes: Franco Seguel, Yair Melinguer
+
 Este es el backend para una plataforma de **gestión académica** que permite a **Profesores y Alumnos** administrar materias, tareas y entregas. El proyecto está construido con **Node.js**, **Express**, **TypeORM** y utiliza **autenticación JWT** con **Passport** para la seguridad.
 
 ---

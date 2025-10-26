@@ -2,7 +2,7 @@ import { AppDataSource } from "../../providers/datasource.provider.js";
 import { Profesor } from "./entity/profesor.entity.js";
 import bcrypt from "bcrypt";
 
-// 🔹 Crear profesor con contraseña cifrada
+// Crear profesor con contraseña cifrada
 export const createProfesor = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Profesor);
@@ -26,7 +26,7 @@ export const createProfesor = async (req, res) => {
   }
 };
 
-// 🔹 Obtener todos los profesores
+// Obtener todos los profesores
 export const getProfesores = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Profesor);
@@ -40,7 +40,7 @@ export const getProfesores = async (req, res) => {
   }
 };
 
-// 🔹 Obtener profesor por ID
+// Obtener profesor por ID
 export const getProfesorById = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Profesor);
@@ -58,7 +58,7 @@ export const getProfesorById = async (req, res) => {
   }
 };
 
-// 🔹 Actualizar profesor (si cambia la contraseña, también se cifra)
+// Actualizar profesor (si cambia la contraseña, también se cifra)
 export const updateProfesor = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Profesor);
@@ -80,7 +80,7 @@ export const updateProfesor = async (req, res) => {
   }
 };
 
-// 🔹 Eliminar profesor
+// Eliminar profesor
 export const deleteProfesor = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Profesor);

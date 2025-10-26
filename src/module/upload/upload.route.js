@@ -7,7 +7,7 @@ dotenv.config();
 
 const router = Router();
 
-// 🔹 Conexión a la base de datos (usando tus datos del .env)
+// Conexión a la base de datos (usando tus datos del .env)
 const pool = mysql.createPool({
   host: process.env.DB_HOST || "localhost",
   user: process.env.DB_USER || "root",

@@ -2,7 +2,7 @@ import { AppDataSource } from "../../providers/datasource.provider.js";
 import { Alumno } from "./entity/alumno.entity.js";
 import bcrypt from "bcrypt";
 
-// 🔹 Crear alumno (encriptando la contraseña)
+// Crear alumno (encriptando la contraseña)
 export const createAlumno = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Alumno);
@@ -26,7 +26,7 @@ export const createAlumno = async (req, res) => {
   }
 };
 
-// 🔹 Obtener todos los alumnos
+// Obtener todos los alumnos
 export const getAlumnos = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Alumno);
@@ -40,7 +40,7 @@ export const getAlumnos = async (req, res) => {
   }
 };
 
-// 🔹 Obtener alumno por ID
+// Obtener alumno por ID
 export const getAlumnoById = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Alumno);
@@ -58,7 +58,7 @@ export const getAlumnoById = async (req, res) => {
   }
 };
 
-// 🔹 Actualizar alumno (si cambia la contraseña, también se encripta)
+// Actualizar alumno (si cambia la contraseña, también se encripta)
 export const updateAlumno = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Alumno);
@@ -80,7 +80,7 @@ export const updateAlumno = async (req, res) => {
   }
 };
 
-// 🔹 Eliminar alumno
+// Eliminar alumno
 export const deleteAlumno = async (req, res) => {
   try {
     const repo = AppDataSource.getRepository(Alumno);
