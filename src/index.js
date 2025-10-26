@@ -12,7 +12,7 @@ const logger = new Signale({ scope: "Main" });
 
 const PORT = envs.PORT || 3000;
 
-// 🚀 Entidades principales (opcional si las usás para inicialización manual)
+// 🚀 Entidades principales (opcional si se usan para inicialización manual)
 import { Profesor } from "./module/profesor/entity/profesor.entity.js";
 import { Alumno } from "./module/alumno/entity/alumno.entity.js";
 import { Materia } from "./module/materia/entity/materia.entity.js";
