@@ -4,7 +4,7 @@ Este es el backend para una plataforma de **gestión académica** que permite a 
 
 ---
 
-## ✨ Características Principales
+## Características Principales
 
 - 👥 **Gestión de Usuarios**: Registro y autenticación (Login) para Profesores y Alumnos.  
 - 🔐 **Autenticación JWT + Passport**: Rutas privadas protegidas.  
@@ -156,6 +156,38 @@ Ejemplo Body (entregar tarea):
   "alumno_id": 1
 }
 
+## Matrículas (/api/matriculas)
+
+| Método     | Ruta                          | Descripción                                                              | Acceso   |
+| :--------- | :---------------------------- | :----------------------------------------------------------------------- | :------- |
+| **POST**   | `/api/matriculas`             | Matricula (inscribe) un alumno en una materia.                           | Profesor |
+| **GET**    | `/api/matriculas`             | Lista todas las relaciones de matrícula existentes (alumnos ↔ materias). | Privado  |
+| **GET**    | `/api/matriculas/materia/:id` | Obtiene todos los alumnos matriculados en una materia específica.        | Privado  |
+| **GET**    | `/api/matriculas/alumno/:id`  | Obtiene todas las materias en las que está matriculado un alumno.        | Privado  |
+| **DELETE** | `/api/matriculas/:id`         | Elimina una matrícula (quita un alumno de una materia).                  | Profesor |
+
+{
+  "alumnoId": 1,
+  "materiaId": 2
+}
+
+{
+  "message": "Alumno matriculado correctamente ✅",
+  "data": {
+    "id": 1,
+    "alumno": {
+      "id": 1,
+      "nombre": "Lucas",
+      "apellido": "Ramirez"
+    },
+    "materia": {
+      "id": 2,
+      "nombre": "Backend"
+    }
+  }
+}
+
+
 ## Subida de Archivos (/api/upload)
 
 | Método   | Ruta          | Descripción                                           |
@@ -174,6 +206,43 @@ Respuesta Exitosa (200):
   "archivoUrl": "uploads/1730123456789-tarea1.pdf",
   "entregada": true
 }
+
+## Matrícula (Alumno-Materia)
+
+Ruta base: /api/matriculas
+
+1. POST /api/matriculas (Rol: Profesor)
+
+Acción: Matricula (inscribe) un alumno en una materia.
+Body (JSON):
+
+{
+  "alumnoId": 1,
+  "materiaId": 2
+}
+
+2. GET /api/matriculas (Privada)
+
+Acción: Lista todas las relaciones de matrícula existentes (alumnos ↔ materias).
+Disponible para: Profesor o Alumno autenticado.
+
+3. GET /api/matriculas/materia/:id (Privada)
+
+Acción: Obtiene todos los alumnos matriculados en una materia específica (por su ID).
+Ejemplo:
+GET /api/matriculas/materia/2
+
+4. GET /api/matriculas/alumno/:id (Privada)
+
+Acción: Obtiene todas las materias en las que está matriculado un alumno (por su ID).
+Ejemplo:
+GET /api/matriculas/alumno/1
+
+5. DELETE /api/matriculas/:id (Rol: Profesor)
+
+Acción: Elimina una matrícula (quita un alumno de una materia).
+Ejemplo:
+DELETE /api/matriculas/3
 
 ## Eventos en Tiempo Real (Socket.IO) 
 
@@ -225,8 +294,21 @@ Muestra las entidades principales (**Profesores**, **Alumnos**, **Materias**, **
 #### 🔗 AlumnoMateria (Tabla Intermedia)
 - **Atributos:** id (PK), alumno_id (FK), materia_id (FK)  
 - **Función:** Relaciona **Alumnos** con **Materias** (N ↔ M)
+Atributos:
 
----
+id (PK) → Identificador único de la matrícula
+
+alumno_id (FK → alumnos.id) → Referencia al alumno matriculado
+
+materia_id (FK → materias.id) → Referencia a la materia en la que se inscribe
+
+Función:
+Relaciona la entidad Alumno con la entidad Materia para representar la relación N ↔ M, permitiendo que:
+
+Un alumno pueda estar matriculado en múltiples materias.
+
+Una materia pueda tener múltiples alumnos.
+
 
 ### 📘 Relaciones del MER
 
@@ -241,11 +323,11 @@ Muestra las entidades principales (**Profesores**, **Alumnos**, **Materias**, **
 
 ### 🧩 Diagrama MER (en texto)
 
-```text
 PROFESOR (1) ───────< MATERIA (N)
 MATERIA (1) ───────< TAREA (N)
 ALUMNO  (1) ───────< TAREA (N)
 ALUMNO  (N) ───────< ALUMNO_MATERIA (M) >────── (N) MATERIA
+
 ## 🎬 7. Diagramas de Secuencia
 
 Los **diagramas de secuencia** representan cómo interactúan los diferentes actores y componentes del sistema a lo largo del tiempo.  
@@ -253,7 +335,6 @@ Muestran el **orden de los mensajes** entre usuarios, controladores, base de dat
 
 A continuación se presentan los dos flujos más importantes del sistema:
 
----
 
 ###  Caso 1: Profesor crea una tarea
 
@@ -270,7 +351,7 @@ El backend valida los datos, la almacena en la base de datos y notifica a los al
 - Socket.IO (Servidor de eventos)
 
 **Flujo:**
-```text
+
 Profesor         API (Express)       Auth Middleware     Controlador       Base de Datos       Socket.IO
    |                    |                    |                  |                  |                  |
    |---- POST /tareas -->|                    |                  |                  |                  |
@@ -428,6 +509,5 @@ tarea_entregada → profesor recibe notificación.
 
 Clonar el repositorio:
 
-```bash
 git clone https://github.com/Francoseguel34/Proyecto-final-backend.git
 cd Proyecto-final-backend
