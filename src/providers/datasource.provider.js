@@ -21,3 +21,6 @@ export const AppDataSource = new DataSource({
   logging: false,
   entities: [Profesor, Alumno, Materia, Tarea, AlumnoMateria],
 });
+
+
+

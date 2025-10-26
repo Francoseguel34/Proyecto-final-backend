@@ -12,17 +12,19 @@ export const AlumnoMateria = new EntitySchema({
   },
   relations: {
     alumno: {
-      target: "Alumno",
+      target: "Alumno",       // Debe coincidir con name de Alumno.entity.js
       type: "many-to-one",
-      joinColumn: { name: "alumno_id" }, // 👈 columna explícita
+      joinColumn: { name: "alumno_id" },
       eager: true,
+      nullable: false,        // 👈 Importante: no permitir null
       onDelete: "CASCADE",
     },
     materia: {
-      target: "Materia",
+      target: "Materia",      // Debe coincidir con name de Materia.entity.js
       type: "many-to-one",
-      joinColumn: { name: "materia_id" }, // 👈 columna explícita
+      joinColumn: { name: "materia_id" },
       eager: true,
+      nullable: false,        // 👈 Igual acá
       onDelete: "CASCADE",
     },
   },
