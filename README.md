@@ -385,17 +385,9 @@ Base de Datos (MySQL)
 Socket.IO
 
 ## flujo
-Alumno           API (Express)        Multer (Upload)     Controlador Upload      Base de Datos       Socket.IO
-   |                    |                    |                     |                     |                  |
-   |-- POST /upload ---->|                    |                     |                     |                  |
-   |                     |---- guarda archivo ->|                     |                     |                  |
-   |                     |<--- ruta archivo ----|                     |                     |                  |
-   |                     |---- UPDATE tarea ------------------------->|                     |                  |
-   |                     |                                           |---- UPDATE -------->|                  |
-   |                     |                                           |<------ OK ----------|                  |
-   |                     |---- emitir evento "tarea_entregada" ------------------------------------------->|
-   |<----------- Respuesta 200 (Entrega registrada) -------------------------------------------------------|
+Flujo:
 
+Profesor API (Express) Auth Middleware Controlador Base de Datos Socket.IO | | | | | | |---- POST /tareas -->| | | | | | |---- validar JWT -->| | | | | |<--- token válido --| | | | | |---- enviar datos -------------------->| | | | | |---- INSERT ----->| | | | |<---- OK ---------| | | |---- emitir evento "nueva_tarea" ----------------------------------------->| |<----------- Respuesta 201 (Tarea creada) -------------------------------------------------------|
 
 Diagrama de Clases
 
