@@ -1,4 +1,4 @@
-# 🏫 Proyecto Final - Backend (Gestión Académica)
+#  Proyecto Final - Backend (Gestión Académica)
 
 Integrantes: Franco Seguel, Yair Melinguer
 
@@ -22,12 +22,19 @@ Este es el backend para una plataforma de **gestión académica** que permite a 
 - ⚙️ **Configuración Segura**: Variables de entorno validadas con **Joi** y **dotenv**.
 
 ---
+##  1. Instalación
 
-## 🛠️ Tecnologías Utilizadas
+Clonar el repositorio:
+
+git clone https://github.com/Francoseguel34/Proyecto-final-backend.git
+
+cd Proyecto-final-backend
 
 
 ## Dependencias instaladas
 npm install express typeorm mysql2 passport passport-jwt jsonwebtoken dotenv joi reflect-metadata nodemon cors
+
+##  Tecnologías Utilizadas
 
 | Tecnología | Descripción |
 |-------------|--------------|
@@ -45,8 +52,6 @@ npm install express typeorm mysql2 passport passport-jwt jsonwebtoken dotenv joi
 | **Nodemon** | Reinicio automático del servidor en desarrollo. |
 
 ---
-
-
 ## Endpoints del Proyecto Final - Backend (Gestión Académica) 
 
 Autenticación (/api/auth)
@@ -261,39 +266,34 @@ DELETE /api/matriculas/3
 | **GET** | `/`  | Verifica que el servidor esté corriendo correctamente. |
 
 
-## 🧱 6. Modelo Entidad–Relación (MER)
+##  6. Modelo Entidad–Relación (MER)
 
-El **Modelo Entidad–Relación (MER)** representa la estructura lógica de la base de datos del sistema.  
-Muestra las entidades principales (**Profesores**, **Alumnos**, **Materias**, **Tareas** y **Alumno_Materia**) y cómo se relacionan entre sí.
+Entidades y Relaciones
 
----
-
-### 🔹 Entidades y Relaciones
-
-#### 👨‍🏫 Profesor
+#### Profesor
 - **Atributos:** id (PK), nombre, apellido, email, password  
 - **Relación:** Un profesor tiene muchas materias *(1 → N)*
 
-#### 👨‍🎓 Alumno
+####  Alumno
 - **Atributos:** id (PK), nombre, apellido, email, password  
 - **Relaciones:**
   - Un alumno puede estar en muchas materias *(N ↔ M, a través de AlumnoMateria)*  
   - Un alumno puede entregar muchas tareas *(1 → N)*
 
-#### 📘 Materia
+####  Materia
 - **Atributos:** id (PK), nombre, descripcion, profesor_id (FK)  
 - **Relaciones:**
   - Una materia pertenece a un profesor *(N → 1)*  
   - Una materia tiene muchas tareas *(1 → N)*  
   - Una materia tiene muchos alumnos *(N ↔ M)*
 
-#### 🧾 Tarea
+#### Tarea
 - **Atributos:** id (PK), titulo, descripcion, fechaEntrega, archivoUrl, entregada, calificacion, materia_id (FK), alumno_id (FK)  
 - **Relaciones:**
   - Una tarea pertenece a una materia *(N → 1)*  
   - Una tarea pertenece a un alumno *(N → 1)*
 
-#### 🔗 AlumnoMateria (Tabla Intermedia)
+####  AlumnoMateria (Tabla Intermedia)
 - **Atributos:** id (PK), alumno_id (FK), materia_id (FK)  
 - **Función:** Relaciona **Alumnos** con **Materias** (N ↔ M)
 Atributos:
@@ -312,7 +312,7 @@ Un alumno pueda estar matriculado en múltiples materias.
 Una materia pueda tener múltiples alumnos.
 
 
-### 📘 Relaciones del MER
+### Relaciones del MER
 
 | Relación | Tipo | Descripción |
 |-----------|------|--------------|
@@ -323,7 +323,7 @@ Una materia pueda tener múltiples alumnos.
 
 ---
 
-### 🧩 Diagrama MER (en texto)
+### Diagrama MER (en texto)
 
 PROFESOR (1) ───────< MATERIA (N)
 MATERIA (1) ───────< TAREA (N)
@@ -333,7 +333,7 @@ ALUMNO  (N) ───────< ALUMNO_MATERIA (M) >────── (N) MA
 ![MER](src/images/image.png)
 
 
-## 🎬 7. Diagramas de Secuencia
+##  7. Diagramas de Secuencia
 
 Los **diagramas de secuencia** representan cómo interactúan los diferentes actores y componentes del sistema a lo largo del tiempo.  
 Muestran el **orden de los mensajes** entre usuarios, controladores, base de datos y servicios del backend.
@@ -506,9 +506,3 @@ nueva_tarea → todos los alumnos matriculados en la materia reciben notificaci�
 
 tarea_entregada → profesor recibe notificación.
 
-## 🧩 1. Instalación
-
-Clonar el repositorio:
-
-git clone https://github.com/Francoseguel34/Proyecto-final-backend.git
-cd Proyecto-final-backend
