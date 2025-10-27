@@ -330,8 +330,8 @@ MATERIA (1) ───────< TAREA (N)
 ALUMNO  (1) ───────< TAREA (N)
 ALUMNO  (N) ───────< ALUMNO_MATERIA (M) >────── (N) MATERIA
 
+![MER](src/images/image.png)
 
-![alt text](image.png)
 
 ## 🎬 7. Diagramas de Secuencia
 
@@ -396,7 +396,7 @@ Profesor API (Express) Auth Middleware Controlador Base de Datos Socket.IO | | |
 
 ## Secuencia completo 
 
-![alt text](image-1.png)
+ ![alt text](src/images/image-1.png)
 
 ## Diagrama de Clases
 
