@@ -330,6 +330,7 @@ MATERIA (1) ───────< TAREA (N)
 ALUMNO  (1) ───────< TAREA (N)
 ALUMNO  (N) ───────< ALUMNO_MATERIA (M) >────── (N) MATERIA
 
+
 ![alt text](image.png)
 
 ## 🎬 7. Diagramas de Secuencia
