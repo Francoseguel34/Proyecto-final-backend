@@ -330,6 +330,8 @@ MATERIA (1) ───────< TAREA (N)
 ALUMNO  (1) ───────< TAREA (N)
 ALUMNO  (N) ───────< ALUMNO_MATERIA (M) >────── (N) MATERIA
 
+![alt text](image.png)
+
 ## 🎬 7. Diagramas de Secuencia
 
 Los **diagramas de secuencia** representan cómo interactúan los diferentes actores y componentes del sistema a lo largo del tiempo.  
@@ -386,12 +388,16 @@ Base de Datos (MySQL)
 
 Socket.IO
 
-## flujo
+## Flujo
 Flujo:
 
 Profesor API (Express) Auth Middleware Controlador Base de Datos Socket.IO | | | | | | |---- POST /tareas -->| | | | | | |---- validar JWT -->| | | | | |<--- token válido --| | | | | |---- enviar datos -------------------->| | | | | |---- INSERT ----->| | | | |<---- OK ---------| | | |---- emitir evento "nueva_tarea" ----------------------------------------->| |<----------- Respuesta 201 (Tarea creada) -------------------------------------------------------|
 
-Diagrama de Clases
+## Secuencia completo 
+
+![alt text](image-1.png)
+
+## Diagrama de Clases
 
 +----------------+
 |    Profesor    |
